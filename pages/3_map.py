@@ -5,14 +5,14 @@ import plotly.express as px
 st.title(" 🗺️ Global population Map")
 @st.cache_data
 def load_data():
-    return pd.read_csv(r"C:\Users\USER\merged_data_withcoordinates.csv")
+    return pd.read_csv("data1/merged_data_withcoordinates.csv")
 
 data_with_coordinates = load_data()
 
 if "selected_year" not in st.session_state:
     st.session_state.selected_year = 2025
 
-years = pd.to_numeric(data_with_coordinates["Year"], errors="coerce")  # ensures numeric
+years = pd.to_numeric(data_with_coordinates["Year"], errors="coerce")  
 years = years.dropna()
 
 projection_year = st.sidebar.slider("Select Year",
@@ -36,8 +36,27 @@ st.info("choose between choropleth map and scatter map")
 tab1,tab2 = st.tabs([" cholopleth Map","Scatter Map"])
 
 with tab1:
-     fig1 = px.choropleth(filtered_data, locations="Country Name", locationmode="country names", color="population", hover_name="Country Name", color_continuous_scale="viridis", title=f"population in {projection_year}")
-     st.plotly_chart(fig1, use_container_width=False)
+     @st.fragment
+     def print_map():
+         fig1 = px.choropleth(filtered_data, locations="Country Name", 
+                              locationmode="country names", 
+                              color="population", hover_name="Country Name",
+                                color_continuous_scale="viridis", 
+                                title=f"population in {projection_year}")
+         st.plotly_chart(fig1, use_container_width=False)
+        
+         
+         return fig1
+     
+colored_map = print_map()
+     
 with tab2:
-    fig2 = px.scatter_geo(filtered_data, lat="latitude", lon="longitude", color="Country Name", size="population", hover_name="Country Name", title=f"population in {projection_year}",projection="natural earth")
-    st.plotly_chart(fig2, use_container_width=False)
+    @st.fragment
+    def print_map2():
+        fig2 = px.scatter_geo(filtered_data, lat="latitude", lon="longitude", color="Country Name", size="population", hover_name="Country Name", title=f"population in {projection_year}",projection="natural earth")
+        st.plotly_chart(fig2, use_container_width=False)
+        return fig2
+scatter_map = print_map2()
+
+
+    

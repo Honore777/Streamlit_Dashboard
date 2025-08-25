@@ -4,7 +4,7 @@ import plotly.express as px
 st.title("📊 Country Comparison")
 @st.cache_data
 def load_data():
-    return   pd.read_csv(r"C:\Users\USER\Population_updated.csv")
+    return   pd.read_csv("data1/Population_updated.csv")
     
 df= load_data()
 
